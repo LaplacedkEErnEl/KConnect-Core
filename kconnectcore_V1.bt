@@ -1,0 +1,13 @@
+#!/usr/bin/bpftrace
+
+tracepoint:sock:inet_sock_set_state
+{
+    printf("%d|%s|%d|%s|%d|%d\n", 
+        pid, 
+        comm,
+        args->protocol,
+        ntop(args->daddr), 
+        args->dport, 
+        args->sport
+    );
+}

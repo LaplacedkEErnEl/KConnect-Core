@@ -1,0 +1,39 @@
+#!/usr/bin/bpftrace
+
+tracepoint:sock:inet_sock_set_state
+{
+    printf("%d|%s|TCP|%s|%d|%d\n", 
+        pid, 
+        comm,
+//        args->protocol,
+        ntop(args->daddr), 
+        args->dport, 
+        args->sport
+    );
+}
+
+kprobe:udp_sendmsg
+{
+    $sk = (struct sock *)arg0;
+    
+    printf("%d|%s|UDP|%s|%d|%d\n", 
+        pid, 
+        comm, 
+        ntop($sk->__sk_common.skc_daddr), // some macro limit bypass stuff, LLM told ;(
+        bswap($sk->__sk_common.skc_dport), 
+        $sk->__sk_common.skc_num
+    );
+}
+
+kprobe:udp_recvmsg
+{
+    $sk = (struct sock *)arg0;
+    
+    printf("%d|%s|UDP|%s|%d|%d\n", 
+        pid, 
+        comm, 
+        ntop($sk->__sk_common.skc_daddr), // some macro limit bypass stuff, LLM told ;(
+        bswap($sk->__sk_common.skc_dport), // bswap is binary swap, converting the network bytes to string??
+        $sk->__sk_common.skc_num
+    );
+}
