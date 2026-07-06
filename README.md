@@ -5,7 +5,7 @@
 
 ## Stuff
 
-- kconnectcore.c excepts input in the format: "PID|PROCESS_NAME|PROTOCOL|DEST_IP|DPORT|SPORT" (used an LLM, i don't understand c very well)
+- kconnectcore.c accepts input in the format: "PID|PROCESS_NAME|PROTOCOL|DEST_IP|DPORT|SPORT" (used an LLM, i don't understand c very well)
 
 - It expects data continuosly, receives 10 valid items and then refreshes terminal.
 
